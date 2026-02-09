@@ -1,6 +1,7 @@
 # missing-child-identification-system
 the System is a machine learning–based application designed to help identify missing children from images. The system allows authorized users to upload a child’s photo, and the model compares it with images stored in the database to find possible matches.  It uses  ML classification techniques to assist in quick and efficient identification.
-📌 Features
+
+Features
 
 Image Upload Module – Upload a child’s photo for identification.
 
@@ -14,17 +15,6 @@ Secure Data Handling – Ensures safe storage and restricted access.
 
 Database Management – Stores child records, photos, and match history.
 
-🛠️ Tech Stack
-
-Python
-
-Machine Learning (OpenCV, TensorFlow / scikit-learn)
-
-Flask / Django (Backend)
-
-HTML, CSS, JavaScript (Frontend)
-
-MySQL / SQLite (Database)
 
 🚀 How It Works
 
@@ -38,33 +28,6 @@ System displays possible matches or similarity scores.
 
 User can verify and update status in the database.
 
-📥 Installation & Setup
-
-Clone the repository
-
-git clone https://github.com/yourusername/missing-child-identification-system.git
-cd missing-child-identification-system
-
-
-Install dependencies
-
-pip install -r requirements.txt
-
-
-Run the application
-
-python app.py
-
-
-Open your browser and visit:
-
-http://localhost:5000
-
-📸 Screenshots (Add your images here)
-/screenshots
-    home_page.png
-    upload_page.png
-    results_page.png
 
 📂 Project Structure
 project/
