@@ -1,0 +1,256 @@
+{% include 'user_header.html' %}
+<br><br>
+
+<style>
+    .form-box {
+        width: 70%;
+        margin: 50px auto;
+        background: rgba(255,255,255,0.95);
+        padding: 40px;
+        border-radius: 18px;
+        box-shadow: 0 6px 22px rgba(0,0,0,0.18);
+        backdrop-filter: blur(6px);
+    }
+
+    h2 {
+        text-align: center;
+        margin-bottom: 25px;
+        font-size: 30px;
+        font-weight: bold;
+        background: linear-gradient(45deg, #4e8cff, #6a5acd);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    label {
+        font-weight: bold;
+        color: #333;
+        margin-top: 12px;
+        display: block;
+        font-size: 15px;
+    }
+
+    input, textarea, select {
+        width: 100%;
+        padding: 12px;
+        margin-top: 7px;
+        border-radius: 10px;
+        border: 1px solid #bbb;
+        background: rgba(255,255,255,0.85);
+        font-size: 15px;
+        transition: 0.3s ease;
+    }
+
+    input:focus, textarea:focus, select:focus {
+        border-color: #4e8cff;
+        box-shadow: 0 0 6px rgba(78, 140, 255, 0.5);
+        outline: none;
+    }
+
+    .map-btn {
+        margin-top: 10px;
+        padding: 10px 20px;
+        border-radius: 10px;
+        background: #4e8cff;
+        color: white;
+        border: none;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    .map-btn:hover {
+        background: #345edb;
+        transform: scale(1.03);
+    }
+
+    .submit-btn {
+        width: 45%;
+        padding: 12px;
+        border: none;
+        margin-top: 25px;
+        background: linear-gradient(45deg, #4e8cff, #6a5acd);
+        color: white;
+        border-radius: 12px;
+        cursor: pointer;
+        font-size: 17px;
+        transition: 0.3s;
+    }
+
+    .submit-btn:hover {
+        transform: scale(1.07);
+        box-shadow: 0 6px 15px rgba(78,140,255,0.35);
+    }
+
+    .msg {
+        color: green;
+        text-align: center;
+        margin-bottom: 10px;
+    }
+
+    /* Map Modal */
+    #mapModal {
+        display: none;
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: rgba(0,0,0,0.5);
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    }
+
+    #mapBox {
+        width: 80%;
+        height: 80%;
+        background: white;
+        padding: 10px;
+        border-radius: 10px;
+        position: relative;
+    }
+
+    #map {
+        width: 100%;
+        height: 90%;
+        margin-top: 10px;
+        border-radius: 10px;
+    }
+
+    .close-btn {
+        position: absolute;
+        top: 10px; right: 10px;
+        background: red;
+        color: white;
+        border: none;
+        padding: 6px 12px;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+</style>
+
+<!-- LEAFLET MAP CSS + JS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<div class="form-box">
+    <h2>Submit Missing Child Case</h2>
+
+    {% if messages %}
+        {% for m in messages %}
+            <p class="msg">{{ m }}</p>
+        {% endfor %}
+    {% endif %}
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <label>Child Name</label>
+        <input type="text" name="child_name" required>
+
+        <label>Age</label>
+        <input type="text" name="age" required>
+
+        <label>Gender</label>
+        <select name="gender">
+            <option>Male</option>
+            <option>Female</option>
+              <option>Other</option>
+        </select>
+
+        <label>Hair Color</label>
+        <input type="text" name="hair_color">
+
+        <label>Height (example: 120 cm / 1.4 meters)</label>
+        <input type="text" name="height" placeholder="Enter height">
+
+        <label>Scar / Marks</label>
+        <input type="text" name="scar_mark">
+
+        <label>Dress Color</label>
+        <input type="text" name="dress_color">
+
+        <label>Child Image</label>
+        <input type="file" name="image">
+
+        <label>Missing Place</label>
+        <input type="text" name="missing_place">
+
+        <label>Extra Details</label>
+        <textarea name="details"></textarea>
+
+        <label>Latitude</label>
+        <input type="text" id="latitude" name="latitude" readonly>
+
+        <label>Longitude</label>
+        <input type="text" id="longitude" name="longitude" readonly>
+
+        <button type="button" class="map-btn" onclick="openMap()">Select Location via Map</button>
+
+        <label>Date</label>
+        <input type="date" name="date">
+
+        <label>Time</label>
+        <input type="time" name="time">
+
+        <center>
+            <button class="submit-btn">Submit Case</button>
+        </center>
+    </form>
+{##}
+{#    <div class="progress-link">#}
+{#        <a href="{% url 'view_case_progress' %}" class="progress-btn">#}
+{#            View Case Progress#}
+{#        </a>#}
+{#    </div>#}
+</div>
+
+<!-- MAP POPUP -->
+<div id="mapModal">
+    <div id="mapBox">
+        <button class="close-btn" onclick="closeMap()">Close</button>
+        <h3>Select Missing Location</h3>
+        <div id="map"></div>
+    </div>
+</div>
+
+<script>
+    let map, marker;
+
+    function openMap() {
+        document.getElementById("mapModal").style.display = "flex";
+
+        if (!map) {
+            initMap();
+        }
+    }
+
+    function closeMap() {
+        document.getElementById("mapModal").style.display = "none";
+    }
+
+    function initMap() {
+        map = L.map("map").setView([20.5937, 78.9629], 5);
+
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+            attribution: "© OpenStreetMap contributors"
+        }).addTo(map);
+
+        map.on("click", function (event) {
+            const lat = event.latlng.lat;
+            const lng = event.latlng.lng;
+
+            if (marker) {
+                marker.setLatLng([lat, lng]);
+            } else {
+                marker = L.marker([lat, lng]).addTo(map);
+            }
+
+            document.getElementById("latitude").value = lat;
+            document.getElementById("longitude").value = lng;
+
+            closeMap();
+        });
+    }
+</script>
+
+<br><br>
+{% include 'footer.html' %}

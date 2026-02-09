@@ -1,0 +1,152 @@
+{% include 'user_header.html' %}
+<br><br>
+
+<style>
+    h2 {
+        text-align: center;
+        margin-top: 30px;
+        font-size: 32px;
+        font-weight: bold;
+        background: linear-gradient(45deg, #4e8cff, #6a5acd);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .grid-container {
+        width: 90%;
+        margin: 30px auto;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 25px;
+    }
+
+    .card {
+        background: #ffffff;
+        border-radius: 15px;
+        padding: 20px;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        transition: 0.3s;
+        border-left: 6px solid #4e8cff;
+    }
+
+    .card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 30px rgba(0,0,0,0.20);
+    }
+
+    .case-title {
+        font-size: 21px;
+        font-weight: bold;
+        color: #4e8cff;
+        margin-bottom: 10px;
+    }
+
+    .case-info {
+        font-size: 14px;
+        color: #333;
+        margin-bottom: 6px;
+    }
+
+    .status-badge {
+        display: inline-block;
+        padding: 5px 12px;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: bold;
+        margin-top: 5px;
+        color: white;
+    }
+
+    .status-missing { background: orange; }
+    .status-checking { background: #007bff; }
+    .status-found { background: green; }
+    .status-rejected { background: #d9534f; }
+    .status-other { background: gray; }
+
+    .progress-title {
+        font-size: 17px;
+        margin-top: 15px;
+        font-weight: bold;
+        color: #222;
+    }
+
+    .progress-item {
+        padding: 10px;
+        border-radius: 10px;
+        margin-top: 8px;
+        font-size: 14px;
+        font-weight: bold;
+        color: white;
+        text-align: center;
+    }
+
+    .prog-missing { background: orange; }
+    .prog-checking { background: #007bff; }
+    .prog-found { background: green; }
+    .prog-rejected { background: #d9534f; }
+
+    .no-update, .rejected-msg {
+        color: red;
+        font-size: 14px;
+        margin-top: 10px;
+        font-weight: bold;
+    }
+</style>
+
+<h2>Your Case Progress</h2>
+
+<div class="grid-container">
+
+    {% for item in data %}
+    <div class="card">
+
+        <div class="case-title">{{ item.case.child_name }}</div>
+
+        <div class="case-info"><b>Missing From:</b> {{ item.case.missing_place }}</div>
+        <div class="case-info"><b>Date:</b> {{ item.case.date }}</div>
+
+        <div class="case-info">
+            <b>Status:</b>
+            {% if item.case.status == "missing" %}
+                <span class="status-badge status-missing">Missing</span>
+            {% elif item.case.status == "checking" %}
+                <span class="status-badge status-checking">Checking</span>
+            {% elif item.case.status == "found" %}
+                <span class="status-badge status-found">Found</span>
+            {% elif item.case.status == "rejected" %}
+                <span class="status-badge status-rejected">Rejected</span>
+            {% else %}
+                <span class="status-badge status-other">{{ item.case.status }}</span>
+            {% endif %}
+        </div>
+
+        <div class="progress-title">Progress Updates</div>
+
+        {% if item.case.status == "rejected" %}
+            <div class="rejected-msg">Case Rejected – No progress available.</div>
+
+        {% else %}
+
+            {% if item.progress %}
+                {% for p in item.progress %}
+                    <div class="progress-item
+                        {% if p.progress == 'missing' %}prog-missing
+                        {% elif p.progress == 'checking' %}prog-checking
+                        {% elif p.progress == 'found' %}prog-found
+                        {% elif p.progress == 'rejected' %}prog-rejected
+                        {% endif %}">
+                        {{ p.progress|title }}
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="no-update">No updates yet</div>
+            {% endif %}
+
+        {% endif %}
+
+    </div>
+    {% endfor %}
+
+</div>
+<br><br><br><br>
+{% include 'footer.html' %}

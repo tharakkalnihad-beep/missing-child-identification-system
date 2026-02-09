@@ -1,0 +1,125 @@
+{% include 'admin_header.html' %}
+
+<style>
+
+
+    .update-container {
+        width: 60%;
+        margin: 120px auto 180px;
+        background: white;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        border-left: 6px solid #4e8cff;
+        animation: fadeIn 0.4s ease-in-out;
+    }
+
+    h2 {
+        text-align: center;
+        font-size: 28px;
+        font-weight: bold;
+        background: linear-gradient(45deg, #4e8cff, #6a5acd);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 20px;
+    }
+
+    .msg {
+        font-weight: bold;
+        text-align: center;
+        margin-bottom: 15px;
+    }
+
+    /* Table Form Styling */
+    .update-table {
+        width: 90%;
+        margin: 0 auto;
+    }
+
+    .update-table td {
+        padding: 12px;
+        font-size: 16px;
+        font-weight: 500;
+        color: #333;
+    }
+
+    .update-table input[type="text"],
+    .update-table input[type="file"] {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        outline: none;
+        font-size: 15px;
+    }
+
+    /* Submit button */
+    .submit-btn {
+        padding: 10px 24px;
+        background: #4e8cff;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: bold;
+        letter-spacing: 1px;
+        font-size: 15px;
+    }
+
+    .submit-btn:hover {
+        background: #345edb;
+    }
+
+    /* Animation */
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(15px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+</style>
+
+<div class="update-container">
+    <h2>Update Awareness Details</h2>
+
+    {% if messages %}
+        {% for message in messages %}
+            <p class="msg" style="color:{% if message.tags == 'error' %}red{% else %}green{% endif %};">
+                {{ message }}
+            </p>
+        {% endfor %}
+    {% endif %}
+
+    <form method="post" action="/admin_update_awareness/{{ a.id }}/" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <table class="update-table">
+            <tr>
+                <td>Title</td>
+                <td><input type="text" name="title" value="{{ a.title }}" required></td>
+            </tr>
+
+            <tr>
+                <td>Description</td>
+                <td><input type="text" name="desc" value="{{ a.description }}" required></td>
+            </tr>
+
+            <tr>
+                <td>File</td>
+                <td>
+                    <input type="file" name="file">
+                    {% if a.file %}
+                        <br><small>Current File:</small><br>
+                        <img src="{{ a.file.url }}" height="100" width="100" style="margin-top:8px; border-radius:8px;">
+                    {% endif %}
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan="2" align="center">
+                    <button type="submit" class="submit-btn">Update</button>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+
+{% include 'admin_footer.html' %}

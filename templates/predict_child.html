@@ -1,0 +1,156 @@
+{% load static %}
+<br><br>
+
+<style>
+    /* FULL PAGE BACKGROUND IMAGE */
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+        background: url("{% static 'bg.png' %}") no-repeat center center fixed;
+        background-size: cover;
+    }
+
+    /* TOP LEFT ICON BUTTON */
+    .back-icon {
+        position: fixed;
+        top: 25px;
+        left: 25px;
+        width: 50px;
+        height: 50px;
+        background: rgba(255,255,255,0.35);
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        backdrop-filter: blur(6px);
+        border: 1px solid rgba(255,255,255,0.4);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        font-size: 28px;
+        color: #ffffff;
+        cursor: pointer;
+        transition: 0.3s;
+        text-decoration: none;
+    }
+
+    .back-icon:hover {
+        transform: scale(1.12);
+        background: rgba(255,255,255,0.55);
+    }
+
+    /* FORM CONTAINER GLASS EFFECT */
+    .container {
+        margin: 80px auto;
+        width: 50%;
+        background: rgba(255, 255, 255, 0.25);
+        padding: 35px;
+        border-radius: 20px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.18);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255,255,255,0.4);
+    }
+
+    /* TITLE */
+    h2 {
+        text-align: center;
+        font-size: 30px;
+        font-weight: bold;
+        background: linear-gradient(45deg, #ffffff, #e6e9ff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    /* FILE INPUT */
+    input[type=file] {
+        padding: 12px;
+        width: 100%;
+        border: none;
+        border-radius: 10px;
+        background: rgba(255,255,255,0.85);
+        font-size: 16px;
+    }
+
+    /* MAIN BUTTON STYLE */
+    button {
+        margin-top: 20px;
+        width: 100%;
+        padding: 12px;
+        background: linear-gradient(90deg,#4e8cff,#6a5acd);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 18px;
+        cursor: pointer;
+        transition: 0.3s;
+        font-weight: bold;
+        text-align: center;
+        display: inline-block;
+    }
+
+    button:hover {
+        background: linear-gradient(90deg,#3a6fde,#5344d4);
+        transform: scale(1.03);
+    }
+
+    /* RESULT BOX */
+    .result-box {
+        margin-top: 30px;
+        padding: 20px;
+        border-radius: 12px;
+        background: rgba(255,255,255,0.85);
+        font-size: 18px;
+        box-shadow: 0 3px 12px rgba(0,0,0,0.12);
+    }
+
+    .label { font-weight: bold; }
+</style>
+
+<!-- BACK ICON BUTTON OUTSIDE CONTAINER -->
+<a href="{% url 'login' %}" class="back-icon">⮜</a>
+
+<div class="container">
+
+    <h2>Missing Child Prediction</h2>
+
+    {% if messages %}
+        {% for message in messages %}
+            <p style="text-align:center; font-weight:bold;
+                color:{% if message.tags == 'error' %}#ff4d4d{% else %}#0daa0d{% endif %};">
+                {{ message }}
+            </p>
+        {% endfor %}
+    {% endif %}
+
+    <!-- UPLOAD FORM -->
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <label><b>Upload Image:</b></label><br><br>
+        <input type="file" name="photo" accept="image/*" required>
+
+        <button type="submit">Predict</button>
+    </form>
+
+    <!-- RESULT -->
+    {% if result %}
+        <div class="result-box">
+
+            {% if result.status == "success" %}
+                <p><span class="label">Matched Child:</span> {{ result.name }}</p>
+                <p><span class="label">Case ID:</span> {{ result.case_id }}</p>
+                <p><span class="label">Distance:</span> {{ result.distance }}</p>
+
+            {% elif result.status == "unknown" %}
+                <p><span class="label">Result:</span> No match found</p>
+                <p><span class="label">Distance:</span> {{ result.distance }}</p>
+
+            {% elif result.status == "no_face" %}
+                <p><span class="label">Error:</span> No face detected in the uploaded image.</p>
+
+            {% else %}
+                <p><span class="label">Error:</span> {{ result.message }}</p>
+
+            {% endif %}
+        </div>
+    {% endif %}
+</div>

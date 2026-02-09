@@ -1,0 +1,82 @@
+{% include "police_header.html" %}
+
+<div class="container-fluid pt-4 px-4" style="margin-bottom: 20%;">
+    <div class="row g-4">
+        <div class="col-sm-12 col-md-12 col-xl-12">
+
+            <center>
+                {% if messages %}
+                    {% for message in messages %}
+                        <p style="color: green;">{{ message }}</p>
+                    {% endfor %}
+                {% endif %}
+                <br>
+            </center>
+
+            <div class="bg-light rounded p-4">
+
+                <h4 class="mb-3">Nearest Public Uploaded Reports</h4>
+
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Sl.No</th>
+                                <th>Distance</th>
+                                <th>Photo</th>
+                                <th>Date</th>
+                                <th>Time</th>
+                                <th>Location</th>
+                                <th>Progress</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {% for i in reports %}
+                            <tr>
+
+                                <td>{{ forloop.counter }}</td>
+
+                                <td>{{ i.distance }} km</td>
+
+                                <td>
+                                    <img src="{{ i.report.photo.url }}" height="80" width="80">
+                                </td>
+
+                                <td>{{ i.report.date }}</td>
+                                <td>{{ i.report.time }}</td>
+
+                                <td>
+                                    <a href="https://www.google.com/maps?q={{ i.report.latitude }},{{ i.report.longitude }}" 
+                                       target="_blank" 
+                                       class="btn btn-info btn-sm">
+                                        View Location
+                                    </a>
+                                </td>
+
+                                <td>
+                                    <form method="POST">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="public_id" value="{{ i.report.id }}">
+
+                                        <select name="progress_value" class="form-select form-select-sm" onchange="this.form.submit()">
+                                            <option value="missing" {% if i.progress == "missing" %}selected{% endif %}>Missing</option>
+                                            <option value="searching" {% if i.progress == "searching" %}selected{% endif %}>Searching</option>
+                                            <option value="found" {% if i.progress == "found" %}selected{% endif %}>Found</option>
+                                        </select>
+                                    </form>
+                                </td>
+
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% include "footer.html" %}

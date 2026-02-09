@@ -1,0 +1,181 @@
+{% include 'user_header.html' %}
+<br><br>
+<style>
+
+
+    .wrapper {
+        width: 90%;
+        margin: 40px auto;
+    }
+
+    h2 {
+        text-align: center;
+        font-size: 32px;
+        font-weight: bold;
+        background: linear-gradient(45deg, #4e8cff, #6a5acd);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 20px;
+    }
+
+    .message {
+        text-align: center;
+        color: green;
+        font-weight: bold;
+    }
+
+    /* Complaint Form */
+    .form-box {
+        background: #ffffff;
+        padding: 25px;
+        border-radius: 15px;
+        width: 70%;
+        margin: 20px auto;
+        box-shadow: 0 5px 18px rgba(0,0,0,0.15);
+    }
+
+    label {
+        font-weight: bold;
+        color: #444;
+        font-size: 15px;
+    }
+
+    textarea {
+        width: 100%;
+        padding: 12px;
+        margin-top: 7px;
+        border-radius: 10px;
+        border: 1px solid #bbb;
+        background: rgba(255,255,255,0.9);
+        font-size: 15px;
+        transition: 0.3s;
+    }
+
+    textarea:focus {
+        border-color: #4e8cff;
+        box-shadow: 0 0 6px rgba(78, 140, 255, 0.5);
+    }
+
+    .submit-btn {
+        width: 40%;
+        padding: 12px;
+        border: none;
+        margin-top: 15px;
+        background: linear-gradient(45deg, #4e8cff, #6a5acd);
+        color: white;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 17px;
+        transition: 0.3s;
+    }
+
+    .submit-btn:hover {
+        transform: scale(1.07);
+    }
+
+    /* GRID VIEW */
+    .grid-container {
+        margin-top: 40px;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 25px;
+    }
+
+    .grid-card {
+        background: white;
+        border-radius: 15px;
+        padding: 18px;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.18);
+        transition: 0.3s ease;
+        border-left: 6px solid #4e8cff;
+    }
+
+    .grid-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 28px rgba(0,0,0,0.25);
+    }
+
+    .complaint-title {
+        font-size: 17px;
+        font-weight: bold;
+        color: #222;
+        margin-bottom: 8px;
+    }
+
+    .reply {
+        font-size: 15px;
+        margin-top: 8px;
+        padding: 10px;
+        border-radius: 8px;
+        background: #e8f4ff;
+        border-left: 4px solid #4e8cff;
+        color: #333;
+    }
+
+    .no-reply {
+        padding: 10px;
+        font-size: 15px;
+        border-radius: 8px;
+        background: #ffeaea;
+        border-left: 4px solid #ff2d2d;
+        color: #cc0000;
+        margin-top: 8px;
+    }
+
+    .date {
+        font-size: 13px;
+        color: #777;
+        margin-top: 10px;
+    }
+</style>
+
+
+
+<div class="wrapper">
+
+    <h2>Send Complaint</h2>
+
+    {% if messages %}
+        {% for msg in messages %}
+            <p class="message">{{ msg }}</p>
+        {% endfor %}
+    {% endif %}
+
+    <div class="form-box">
+        <form method="post">
+            {% csrf_token %}
+            <label>Your Complaint</label>
+            <textarea name="complaint" rows="3" required></textarea>
+
+            <center>
+                <button class="submit-btn">Submit</button>
+            </center>
+        </form>
+    </div>
+
+    <h2>Your Complaints</h2>
+
+    <!-- GRID VIEW -->
+    <div class="grid-container">
+
+        {% for c in complaints %}
+        <div class="grid-card">
+
+            <div class="complaint-title">📌 {{ c.complaint }}</div>
+
+            {% if c.reply %}
+                <div class="reply">🟢 Reply: {{ c.reply }}</div>
+            {% else %}
+                <div class="no-reply">⛔ No reply yet</div>
+            {% endif %}
+
+            <div class="date">📅 {{ c.date }}</div>
+
+        </div>
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% include 'footer.html' %}

@@ -1,0 +1,144 @@
+{% include 'admin_header.html' %}
+
+<style>
+    .page-container {
+        margin: 40px auto 18%;
+        width: 95%;
+    }
+
+    .box {
+        background: #ffffff;
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+        border-left: 6px solid #4e8cff;
+    }
+
+    .box h6 {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 20px;
+        background: linear-gradient(45deg, #4e8cff, #6a5acd);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .styled-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0 12px;
+        text-align: center;
+    }
+
+    .styled-table th {
+        padding: 12px;
+        font-weight: bold;
+        border-bottom: 2px solid #d9e3ff;
+    }
+
+    .styled-table td {
+        background: white;
+        padding: 12px;
+        border-radius: 12px;
+        box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+        vertical-align: middle;
+    }
+
+    .child-img {
+        height: 80px;
+        width: 80px;
+        object-fit: cover;
+        border-radius: 10px;
+    }
+
+    .badge {
+        padding: 6px 12px;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: bold;
+        color: white;
+    }
+
+    .missing { background: orange; }
+    .checking { background: #007bff; }
+    .found { background: green; }
+    .rejected { background: red; }
+    .other { background: gray; }
+
+</style>
+
+<div class="page-container">
+
+    <div class="box">
+        <h6>Missing Child Case Details</h6>
+
+        <div class="table-responsive">
+            <table class="styled-table">
+                <thead>
+                    <tr>
+                        <th>Sl.No</th>
+                        <th>Child Name</th>
+                        <th>Age</th>
+                        <th>Gender</th>
+                        <th>Image</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                        <th>Progress Updates</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for item in data %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+
+                        <td>{{ item.case.child_name }}</td>
+                        <td>{{ item.case.age }}</td>
+                        <td>{{ item.case.gender }}</td>
+
+                        <td>
+                            {% if item.case.image %}
+                                <img src="{{ item.case.image.url }}" class="child-img">
+                            {% else %}
+                                No Image
+                            {% endif %}
+                        </td>
+
+                        <td>{{ item.case.date }}</td>
+
+                        <td>
+                            {% if item.case.status == "missing" %}
+                                <span class="badge missing">Missing</span>
+                            {% elif item.case.status == "checking" %}
+                                <span class="badge checking">Checking</span>
+                            {% elif item.case.status == "found" %}
+                                <span class="badge found">Found</span>
+                            {% elif item.case.status == "rejected" %}
+                                <span class="badge rejected">Rejected</span>
+                            {% else %}
+                                <span class="badge other">{{ item.case.status }}</span>
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            {% for p in item.progress_list %}
+                                <span class="badge other" style="display:block; margin-bottom:5px;">
+                                    {{ p|title }}
+                                </span>
+                            {% empty %}
+                                No Updates
+                            {% endfor %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+</div>
+
+{% include 'admin_footer.html' %}

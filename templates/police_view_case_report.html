@@ -1,0 +1,198 @@
+{% include "police_header.html" %}
+<br><br>
+
+<style>
+    .page-container {
+        margin: 40px auto 15%;
+        width: 95%;
+    }
+
+    .box {
+        background: #ffffff;
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+        border-left: 6px solid #4e8cff;
+    }
+
+    .box h6 {
+        font-size: 22px;
+        font-weight: bold;
+        margin-bottom: 20px;
+        background: linear-gradient(45deg, #4e8cff, #6a5acd);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .table-custom {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0 10px;
+    }
+
+    .table-custom thead tr {
+        background: #eef3ff;
+    }
+
+    .table-custom th {
+        padding: 12px;
+        text-align: center;
+        font-weight: bold;
+        color: #333;
+        font-size: 14px;
+        border-bottom: 2px solid #d9e3ff;
+    }
+
+    .table-custom td {
+        padding: 12px;
+        text-align: center;
+        background: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+        vertical-align: middle;
+        font-size: 14px;
+    }
+
+    .table-custom tr:hover td {
+        background: #f1f6ff;
+        transition: 0.2s ease-in-out;
+    }
+
+    .child-img {
+        height: 70px;
+        width: 70px;
+        object-fit: cover;
+        border-radius: 8px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+
+    .btn-sm {
+        padding: 5px 10px;
+        border-radius: 8px;
+        font-size: 13px;
+        margin: 3px 0;
+        width: 90px;
+        display: block;
+    }
+
+    .btn-success { background: #28a745; border: none; color: white; }
+    .btn-success:hover { background: #1f8a39; }
+
+    .btn-danger { background: #dc3545; border: none; color: white; }
+    .btn-danger:hover { background: #b82b38; }
+
+    .btn-info { background: #17a2b8; border: none; color: white; }
+    .btn-info:hover { background: #117684; }
+
+    .form-select-sm {
+        font-size: 13px;
+        border-radius: 8px;
+        padding: 5px;
+    }
+</style>
+
+<div class="page-container">
+
+    <center>
+        {% if messages %}
+            {% for message in messages %}
+                <p style="color: {% if message.tags == 'error' %}red{% else %}green{% endif %}; font-weight:bold;">
+                    {{ message }}
+                </p>
+            {% endfor %}
+        {% endif %}
+    </center>
+
+    <div class="box">
+        <h6>Nearest Missing Child Reports</h6>
+
+        <div class="table-responsive">
+            <table class="table-custom">
+                <thead>
+                    <tr>
+                        <th>Sl.No</th>
+                        <th>Distance</th>
+                        <th>Child</th>
+                        <th>Age</th>
+                        <th>Gender</th>
+                        <th>Image</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                        <th>Update Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for i in cases %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ i.distance }} km</td>
+                        <td>{{ i.case.child_name }}</td>
+                        <td>{{ i.case.age }}</td>
+                        <td>{{ i.case.gender }}</td>
+
+                        <td>
+                            {% if i.case.image %}
+                                <img src="{{ i.case.image.url }}" class="child-img">
+                            {% else %}
+                                <small>No Image</small>
+                            {% endif %}
+                        </td>
+
+                        <td>{{ i.case.date }}</td>
+
+                        <td>
+                            {% if i.case.status == "accepted" %}
+                                <span style="color:green; font-weight:bold;">Accepted</span>
+                            {% elif i.case.status == "rejected" %}
+                                <span style="color:red; font-weight:bold;">Rejected</span>
+                            {% elif i.case.status == "checking" %}
+                                <span style="color:#007bff; font-weight:bold;">Checking</span>
+                            {% elif i.case.status == "found" %}
+                                <span style="color:green; font-weight:bold;">Found</span>
+                            {% else %}
+                                <span style="color:#555;">Missing</span>
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            {% if i.case.status != "rejected" %}
+                                <form method="POST" action="{% url 'police_update_status' i.case.id %}">
+                                    {% csrf_token %}
+                                    <select name="status_value" class="form-select-sm" onchange="this.form.submit()">
+                                        <option value="missing" {% if i.case.status == 'missing' %}selected{% endif %}>Missing</option>
+                                        <option value="checking" {% if i.case.status == 'checking' %}selected{% endif %}>Checking</option>
+                                        <option value="found" {% if i.case.status == 'found' %}selected{% endif %}>Found</option>
+                                    </select>
+                                </form>
+                            {% else %}
+                                <span style="color:red;">Rejected</span>
+                            {% endif %}
+                        </td>
+
+                        <td>
+
+                            {% if i.case.status == "missing" %}
+                                <a href="{% url 'police_accept_report' i.case.id %}" class="btn btn-success btn-sm">Accept</a>
+                                <a href="{% url 'police_reject_report' i.case.id %}" class="btn btn-danger btn-sm">Reject</a>
+                            {% endif %}
+
+                            <a href="{% url 'police_view_user' i.case.id %}" class="btn btn-info btn-sm">
+                                Reporter
+                            </a>
+
+                        </td>
+
+                    </tr>
+                    {% endfor %}
+                </tbody>
+
+            </table>
+        </div>
+
+    </div>
+
+</div>
+
+{% include "footer.html" %}

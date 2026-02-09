@@ -1,0 +1,196 @@
+{% include 'admin_header.html' %}
+
+<style>
+    .page-container {
+        margin: 40px auto 18%;
+        width: 95%;
+    }
+
+    .box {
+        background: #ffffff;
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+        border-left: 6px solid #4e8cff;
+    }
+
+    .box h6 {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 20px;
+        background: linear-gradient(45deg, #4e8cff, #6a5acd);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    /* Table Styling */
+    .styled-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0 12px;
+    }
+
+    .styled-table thead tr {
+        background: #eef3ff;
+        text-align: center;
+    }
+
+    .styled-table th {
+        padding: 12px;
+        font-weight: bold;
+        font-size: 14px;
+        color: #333;
+        border-bottom: 2px solid #d9e3ff;
+    }
+
+    .styled-table td {
+        background: white;
+        padding: 12px;
+        border-radius: 12px;
+        text-align: center;
+        font-size: 14px;
+        box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+        vertical-align: middle;
+    }
+
+    .styled-table tr:hover td {
+        background: #f1f6ff;
+        transition: 0.3s ease;
+    }
+
+    /* Status Colors */
+    .status-approved {
+        color: green;
+        font-weight: bold;
+    }
+
+    .status-pending {
+        color: #d39e00;
+        font-weight: bold;
+    }
+
+    .status-rejected {
+        color: red;
+        font-weight: bold;
+    }
+
+    /* Buttons */
+    .btn-action {
+        padding: 6px 12px;
+        border-radius: 8px;
+        color: white;
+        text-decoration: none;
+        font-size: 13px;
+        display: inline-block;
+        margin: 2px;
+        font-weight: bold;
+    }
+
+    .approve {
+        background: #28a745;
+    }
+    .approve:hover {
+        background: #1f8a39;
+    }
+
+    .reject {
+        background: #dc3545;
+    }
+    .reject:hover {
+        background: #b82b38;
+    }
+
+    .view-btn {
+        background: #4e8cff;
+    }
+    .view-btn:hover {
+        background: #345edb;
+    }
+
+    /* Messages */
+    .msg {
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+</style>
+
+<div class="page-container">
+    <center>
+        {% if messages %}
+            {% for message in messages %}
+                <p class="msg" style="color: {% if message.tags == 'error' %}red{% else %}green{% endif %};">
+                    {{ message }}
+                </p>
+            {% endfor %}
+        {% endif %}
+    </center>
+
+    <div class="box">
+        <h6>New Registered Police Stations</h6>
+
+        <div class="table-responsive">
+            <table class="styled-table">
+                <thead>
+                    <tr>
+                        <th>Sl.No</th>
+                        <th>Station Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Place</th>
+                        <th>Latitude</th>
+                        <th>Longitude</th>
+                        <th>Status</th>
+                        <th>SHO ID</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% if a %}
+                        {% for i in a %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ i.station_name }}</td>
+                                <td>{{ i.email }}</td>
+                                <td>{{ i.phone }}</td>
+                                <td>{{ i.place }}</td>
+                                <td>{{ i.latitude }}</td>
+                                <td>{{ i.longitude }}</td>
+
+                                <td>
+                                    {% if i.approval_status == "approved" %}
+                                        <span class="status-approved">Approved</span>
+                                    {% elif i.approval_status == "pending" %}
+                                        <span class="status-pending">Pending</span>
+                                    {% else %}
+                                        <span class="status-rejected">Rejected</span>
+                                    {% endif %}
+                                </td>
+
+                                <td>{{ i.sho_id }}</td>
+
+                                <td>
+                                    {% if i.approval_status == "pending" %}
+                                        <a href="/admin_approve_police/{{ i.id }}" class="btn-action approve"
+                                           onclick="return confirm('Approve this police station?')">Approve</a>
+
+                                        <a href="/admin_reject_police/{{ i.id }}" class="btn-action reject"
+                                           onclick="return confirm('Reject this police station?')">Reject</a>
+
+                                    {% elif i.approval_status == "approved" %}
+                                        <a href="/admin_view_missing_data/{{ i.id }}" class="btn-action view-btn">
+                                            View Missing Data
+                                        </a>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+
+{% include "admin_footer.html" %}

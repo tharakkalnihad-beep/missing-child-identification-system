@@ -1,0 +1,159 @@
+
+{% include 'police_header.html' %}
+
+<style>
+
+    .container {
+        text-align: center;
+        padding: 60px 20px;
+    }
+
+    /* ICON */
+    .icon-box {
+        width: 130px;
+        height: 130px;
+        background: linear-gradient(135deg, #4e8cff, #6a5acd);
+        border-radius: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0 auto;
+        box-shadow: 0px 8px 20px rgba(0,0,0,0.20);
+    }
+
+    .icon-box span {
+        font-size: 65px;
+        color: white;
+    }
+
+    /* HEADINGS */
+    h1 {
+        font-size: 36px;
+        margin-top: 25px;
+        font-weight: bold;
+        background: linear-gradient(45deg, #4e8cff, #6a5acd);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .subtitle {
+        color: #555;
+        font-size: 18px;
+        margin-bottom: 30px;
+    }
+
+    /* MAIN BUTTON */
+    .detect-btn {
+        padding: 12px 25px;
+        font-size: 18px;
+        background: linear-gradient(45deg, #4e8cff, #6a5acd);
+        color: white;
+        border-radius: 10px;
+        text-decoration: none;
+        box-shadow: 0 4px 10px rgba(78, 140, 255, 0.3);
+        transition: 0.3s;
+    }
+
+    .detect-btn:hover {
+        transform: scale(1.05);
+        box-shadow: 0 6px 16px rgba(78, 140, 255, 0.4);
+    }
+
+    /* FEATURES SECTION */
+    .features {
+        margin-top: 45px;
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 25px;
+    }
+
+    .feature-card {
+        width: 260px;
+        background: white;
+        border-radius: 15px;
+        padding: 25px;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+        transition: 0.3s ease;
+        text-align: center;
+    }
+
+    .feature-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+    }
+
+    .feature-icon {
+        font-size: 40px;
+        margin-bottom: 10px;
+        background: linear-gradient(45deg, #4e8cff, #6a5acd);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .feature-title {
+        font-size: 20px;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 8px;
+    }
+
+    .feature-desc {
+        color: #555;
+        font-size: 14px;
+    }
+
+</style>
+
+<div class="container">
+
+
+
+    <h1>Police Control Panel</h1>
+    <p class="subtitle">Manage missing child cases, public uploads, and investigation progress</p>
+
+    <a href="/police_view_case_report/" class="detect-btn">View All Cases</a>
+
+    <div class="features">
+
+        <div class="feature-card">
+            <div class="feature-icon">📄</div>
+            <div class="feature-title">View Case Reports</div>
+            <div class="feature-desc">Check all missing child reports submitted by users.</div>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">📝</div>
+            <div class="feature-title">Update Case Progress</div>
+            <div class="feature-desc">Add investigation updates for each assigned case.</div>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">📸</div>
+            <div class="feature-title">Public Uploads</div>
+            <div class="feature-desc">View photos uploaded by public for possible matches.</div>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">📍</div>
+            <div class="feature-title">Track Locations</div>
+            <div class="feature-desc">Check locations where sightings were reported.</div>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">📢</div>
+            <div class="feature-title">View Complaints</div>
+            <div class="feature-desc">Respond to complaints submitted by users.</div>
+        </div>
+
+{#        <div class="feature-card">#}
+{#            <div class="feature-icon">🛡️</div>#}
+{#            <div class="feature-title">Awareness Programs</div>#}
+{#            <div class="feature-desc">Publish safety updates and awareness material.</div>#}
+{#        </div>#}
+
+    </div>
+
+</div>
+
+{% include "footer.html" %}

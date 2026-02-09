@@ -1,0 +1,189 @@
+{% include "public_header.html" %}
+<br><br>
+
+<style>
+
+    body {
+        background: linear-gradient(120deg, #4e8cff55, #6a5acd55);
+        font-family: Arial;
+    }
+
+    .container {
+        margin: 70px auto;
+        width: 55%;
+        background: white;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+
+    h2 {
+        text-align: center;
+        background: linear-gradient(45deg, #4e8cff, #6a5acd);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-size: 28px;
+        margin-bottom: 20px;
+    }
+
+    label {
+        font-weight: bold;
+        margin-top: 10px;
+    }
+
+    input, textarea, select {
+        width: 100%;
+        padding: 10px;
+        margin-top: 8px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        font-size: 15px;
+    }
+
+    .map-box {
+        display: none;   /* Hidden initially */
+        margin-top: 15px;
+    }
+
+    #map {
+        height: 300px;
+        width: 100%;
+        margin-top: 10px;
+        border-radius: 10px;
+        border: 2px solid #4e8cff;
+    }
+
+    button, .btn-toggle {
+        width: 50%;
+        padding: 12px;
+        background: #4e8cff;
+        color: white;
+        border-radius: 10px;
+        border: none;
+        font-size: 16px;
+        margin-top: 15px;
+        cursor: pointer;
+        transition: 0.2s ease;
+    }
+
+    .btn-toggle:hover {
+        background: #345edb;
+    }
+
+    button:hover {
+        background: #345edb;
+    }
+
+    .msg {
+        text-align: center;
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
+
+</style>
+
+<!-- Leaflet CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+
+<div class="container">
+
+    {% if messages %}
+        {% for message in messages %}
+            <p class="msg" style="color:{% if message.tags == 'error' %}red{% else %}green{% endif %}">
+                {{ message }}
+            </p>
+        {% endfor %}
+    {% endif %}
+
+    <h2>Public Missing Child Submission</h2>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <label>Child Name</label>
+        <input type="text" name="child_name" required>
+
+        <label>Age</label>
+        <input type="text" name="age" required>
+
+        <label>Gender</label>
+        <select name="gender" required>
+            <option value="" disabled selected>Select Gender</option>
+            <option>Male</option>
+            <option>Female</option>
+            <option>Other</option>
+        </select>
+<br>
+
+        <label>Details</label>
+        <textarea name="details" required></textarea>
+<br><br>
+        <label>Select Location</label><br>
+        <button type="button" class="btn-toggle" onclick="toggleMap()">Open Map</button>
+
+        <!-- MAP BOX (Initially hidden) -->
+        <div class="map-box" id="mapBox">
+            <div id="map"></div>
+            <button type="button" class="btn-toggle" onclick="toggleMap()">Close Map</button>
+        </div>
+<br><br>
+        <label>Latitude</label>
+        <input type="text" name="latitude" id="latitude" readonly required>
+
+        <label>Longitude</label>
+        <input type="text" name="longitude" id="longitude" readonly required>
+
+        <label>Upload Photo</label>
+        <input type="file" name="photo" required>
+
+        <button type="submit">Submit & Train</button>
+    </form>
+
+</div>
+
+
+<script>
+    // MAP TOGGLE
+    function toggleMap() {
+        var box = document.getElementById("mapBox");
+        if (box.style.display === "none" || box.style.display === "") {
+            box.style.display = "block";
+            setTimeout(() => map.invalidateSize(), 200); // Fix map size when shown
+        } else {
+            box.style.display = "none";
+        }
+    }
+
+    // Initialize map (hidden at first)
+    var map = L.map('map').setView([20.5937, 78.9629], 5);
+
+    // Add tiles
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 18,
+    }).addTo(map);
+
+    var marker;
+
+    // On map click
+    map.on('click', function(e) {
+        var lat = e.latlng.lat.toFixed(6);
+        var lng = e.latlng.lng.toFixed(6);
+
+        document.getElementById("latitude").value = lat;
+        document.getElementById("longitude").value = lng;
+
+        if (marker) {
+            map.removeLayer(marker);
+        }
+
+        marker = L.marker([lat, lng]).addTo(map);
+    });
+
+</script>
+
+<br><br>
+{% include "footer.html" %}

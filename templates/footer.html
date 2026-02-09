@@ -1,0 +1,49 @@
+
+    <footer>
+        <p>&copy; MS System. All rights reserved.</p>
+    </footer>
+
+    <script>
+        function createParticles() {
+            const particleCount = 30;
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 15 + 's';
+                particle.style.animationDuration = (15 + Math.random() * 10) + 's';
+                document.body.appendChild(particle);
+            }
+        }
+
+        function createWaterDrops() {
+            const dropCount = 15;
+            for (let i = 0; i < dropCount; i++) {
+                const drop = document.createElement('div');
+                drop.className = 'water-drop';
+                drop.style.left = Math.random() * 100 + '%';
+                drop.style.animationDelay = Math.random() * 8 + 's';
+                drop.style.animationDuration = (8 + Math.random() * 5) + 's';
+                document.body.appendChild(drop);
+            }
+        }
+
+        function toggleMenu() {
+            const nav = document.getElementById('nav');
+            nav.classList.toggle('active');
+        }
+
+        createParticles();
+        createWaterDrops();
+
+        const fireIcon = document.querySelector('.fire-icon');
+
+        fireIcon.addEventListener('click', () => {
+            fireIcon.style.animation = 'rotate3d 2s ease-in-out';
+            setTimeout(() => {
+                fireIcon.style.animation = '';
+            }, 2000);
+        });
+    </script>
+</body>
+</html>

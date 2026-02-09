@@ -1,0 +1,189 @@
+{% include "police_header.html" %}
+<br><br>
+<style>
+
+
+    .main-box {
+        width: 75%;
+        margin: 40px auto;
+        background: #ffffff;
+        padding: 35px;
+        border-radius: 18px;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+        border-left: 6px solid #4e8cff;
+    }
+
+    h2 {
+        text-align: center;
+        font-size: 30px;
+        font-weight: bold;
+        margin-bottom: 25px;
+        background: linear-gradient(45deg, #4e8cff, #6a5acd);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .section-title {
+        font-size: 20px;
+        font-weight: bold;
+        margin-top: 25px;
+        margin-bottom: 10px;
+        color: #333;
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px;
+        margin-top: 10px;
+    }
+
+    .info-box {
+        background: #eef3ff;
+        padding: 15px;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .label {
+        font-weight: bold;
+        color: #333;
+        font-size: 15px;
+    }
+
+    .value {
+        color: #444;
+        font-size: 15px;
+    }
+
+    .child-img-box {
+        text-align: center;
+        margin-bottom: 25px;
+    }
+
+    .child-img {
+        height: 200px;
+        width: 200px;
+        object-fit: cover;
+        border-radius: 12px;
+        box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+    }
+
+    .id-proof-link {
+        margin-top: 10px;
+        display: inline-block;
+        padding: 6px 12px;
+        background: #4e8cff;
+        color: white;
+        border-radius: 8px;
+        text-decoration: none;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+        transition: 0.3s;
+    }
+
+    .id-proof-link:hover {
+        background: #365edb;
+        transform: scale(1.05);
+    }
+
+</style>
+
+<div class="main-box">
+
+    <h2>Reporter Details</h2>
+
+    <!-- CHILD IMAGE -->
+    <div class="child-img-box">
+        {% if case.image %}
+            <img src="{{ case.image.url }}" class="child-img" alt="Child Image">
+        {% else %}
+            <p>No Image Available</p>
+        {% endif %}
+    </div>
+
+    <!-- CHILD INFORMATION -->
+    <div class="section-title">Missing Child Information</div>
+
+    <div class="info-grid">
+        <div class="info-box">
+            <span class="label">Child Name:</span>
+            <span class="value"> {{ case.child_name }} </span>
+        </div>
+
+        <div class="info-box">
+            <span class="label">Age:</span>
+            <span class="value"> {{ case.age }} </span>
+        </div>
+
+        <div class="info-box">
+            <span class="label">Gender:</span>
+            <span class="value"> {{ case.gender }} </span>
+        </div>
+
+        <div class="info-box">
+            <span class="label">Dress Color:</span>
+            <span class="value"> {{ case.dress_color }} </span>
+        </div>
+
+        <div class="info-box">
+            <span class="label">Missing Place:</span>
+            <span class="value"> {{ case.missing_place }} </span>
+        </div>
+
+        <div class="info-box">
+            <span class="label">Missing Date:</span>
+            <span class="value"> {{ case.date }} </span>
+        </div>
+    </div>
+
+    <!-- REPORTER INFORMATION -->
+    <div class="section-title">Reporter Information</div>
+
+    <div class="info-grid">
+
+        <div class="info-box">
+            <span class="label">Name:</span>
+            <span class="value">{{ user.fname }} {{ user.lname }}</span>
+        </div>
+
+        <div class="info-box">
+            <span class="label">Email:</span>
+            <span class="value">{{ user.email }}</span>
+        </div>
+
+        <div class="info-box">
+            <span class="label">Phone:</span>
+            <span class="value">{{ user.phone }}</span>
+        </div>
+
+        <div class="info-box">
+            <span class="label">Alt Phone:</span>
+            <span class="value">{{ user.alternative_ph_no }}</span>
+        </div>
+
+        <div class="info-box">
+            <span class="label">Place:</span>
+            <span class="value">{{ user.place }}</span>
+        </div>
+
+        <div class="info-box">
+            <span class="label">Address:</span>
+            <span class="value">{{ user.address }}</span>
+        </div>
+
+    </div>
+
+    <!-- ID Proof -->
+    <div class="section-title">ID Proof</div>
+
+    {% if user.id_proof %}
+        <a href="{{ user.id_proof.url }}" target="_blank" class="id-proof-link">
+            View Uploaded Proof
+        </a>
+    {% else %}
+        <p>No ID proof uploaded</p>
+    {% endif %}
+
+</div>
+<br><br>
+{% include "footer.html" %}

@@ -1,0 +1,99 @@
+{% include 'user_header.html' %}
+<br><br>
+<style>
+
+    .awareness-container {
+        width: 85%;
+        margin: 40px auto;
+    }
+
+    h2 {
+        text-align: center;
+        font-size: 32px;
+        font-weight: bold;
+        background: linear-gradient(45deg, #4e8cff, #6a5acd);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 30px;
+    }
+
+    .awareness-list {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 25px;
+    }
+
+    .card {
+        width: 330px;
+        background: #ffffff;
+        padding: 20px;
+        border-radius: 15px;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        transition: 0.3s;
+    }
+
+    .card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+    }
+
+    .card-title {
+        font-size: 20px;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 6px;
+    }
+
+    .card-date {
+        color: #666;
+        font-size: 14px;
+        margin-bottom: 12px;
+    }
+
+    .card-desc {
+        font-size: 15px;
+        color: #444;
+        margin-bottom: 15px;
+    }
+
+    .file-btn {
+        display: inline-block;
+        padding: 8px 16px;
+        background: #4e8cff;
+        color: white;
+        border-radius: 8px;
+        font-size: 14px;
+        text-decoration: none;
+        transition: 0.3s;
+    }
+
+    .file-btn:hover {
+        background: #345edb;
+    }
+</style>
+
+<div class="awareness-container">
+    <h2>Awareness & Safety Information</h2>
+
+    <div class="awareness-list">
+
+        {% for a in items %}
+        <div class="card">
+            <div class="card-title">{{ a.title }}</div>
+            <div class="card-date">Date: {{ a.date }}</div>
+
+            <div class="card-desc">{{ a.description }}</div>
+
+            {% if a.file %}
+                <a href="{{ a.file.url }}" target="_blank" class="file-btn">View File</a>
+            {% else %}
+                <p style="color:red; font-size:14px;">No file attached</p>
+            {% endif %}
+        </div>
+        {% endfor %}
+
+    </div>
+</div>
+
+{% include 'footer.html' %}

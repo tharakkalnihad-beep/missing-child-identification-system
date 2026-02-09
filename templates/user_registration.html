@@ -1,0 +1,253 @@
+{% include 'public_header.html' %}
+
+<style>
+    .reg-container {
+        margin-top: 80px;
+        margin-bottom: 150px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .reg-card {
+        background: rgba(255, 255, 255, 0.78);
+        backdrop-filter: blur(10px);
+        padding: 40px;
+        width: 520px;
+        border-radius: 15px;
+        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.15);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        animation: fadeIn 0.6s ease-in-out;
+        text-align: center;
+    }
+
+    .reg-card h2 {
+        font-size: 30px;
+        margin-bottom: 20px;
+        font-weight: bold;
+        background: linear-gradient(45deg, #007bff, #6a5acd);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .reg-card table {
+        width: 100%;
+        text-align: left;
+    }
+
+    .reg-card td {
+        padding: 10px 0;
+    }
+
+    .reg-card input[type="text"],
+    .reg-card input[type="email"],
+    .reg-card input[type="password"],
+    .reg-card input[type="file"] {
+        width: 95%;
+        padding: 10px;
+        border-radius: 8px;
+        border: 1px solid #bbb;
+        font-size: 15px;
+        background: rgba(255,255,255,0.90);
+        transition: 0.3s;
+    }
+
+    .reg-card input:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 6px rgba(0,123,255,0.5);
+        outline: none;
+    }
+
+    .reg-card input[type="submit"] {
+        width: 60%;
+        padding: 12px;
+        background: linear-gradient(45deg, #007bff, #6a5acd);
+        color: white;
+        font-size: 17px;
+        border: none;
+        border-radius: 10px;
+        margin-top: 15px;
+        cursor: pointer;
+        transition: 0.3s ease;
+    }
+
+    .reg-card input[type="submit"]:hover {
+        transform: scale(1.05);
+        opacity: 0.9;
+    }
+
+    .password-box {
+        position: relative;
+        width: 95%;
+    }
+
+    .eye-icon {
+        position: absolute;
+        right: 10px;
+        top: 12px;
+        font-size: 18px;
+        cursor: pointer;
+        color: #444;
+        transition: 0.2s;
+        user-select: none;
+    }
+
+    .eye-icon:hover {
+        transform: scale(1.15);
+        color: #007bff;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(25px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+</style>
+
+<div class="reg-container">
+    <div class="reg-card">
+        <h2>User Registration</h2>
+
+        {% if messages %}
+            {% for message in messages %}
+                <p style="color:{% if message.tags == 'error' %}red{% else %}green{% endif %};">
+                    {{ message }}
+                </p>
+            {% endfor %}
+        {% endif %}
+
+        <form method="post" enctype="multipart/form-data" onsubmit="return validateUser()">
+            {% csrf_token %}
+            <table>
+                <tr>
+                    <td>First Name</td>
+                    <td><input type="text" id="fname" name="fname"></td>
+                </tr>
+
+                <tr>
+                    <td>Last Name</td>
+                    <td><input type="text" id="lname" name="lname"></td>
+                </tr>
+
+                <tr>
+                    <td>Email</td>
+                    <td><input type="email" id="email" name="email"></td>
+                </tr>
+
+                <tr>
+                    <td>Phone</td>
+                    <td><input type="text" id="phone" name="phone"></td>
+                </tr>
+
+                <tr>
+                    <td>Place</td>
+                    <td><input type="text" id="place" name="place"></td>
+                </tr>
+
+                <tr>
+                    <td>Address</td>
+                    <td><input type="text" id="address" name="address"></td>
+                </tr>
+
+                <tr>
+                    <td>Alternative Phone</td>
+                    <td><input type="text" id="alt_no" name="alt_no"></td>
+                </tr>
+
+                <tr>
+                    <td>Proof</td>
+                    <td><input type="file" name="proof" required></td>
+                </tr>
+
+                <tr>
+                    <td>Username</td>
+                    <td><input type="text" id="username" name="username"></td>
+                </tr>
+
+                <tr>
+                    <td>Password</td>
+                    <td>
+                        <div class="password-box">
+                            <input type="password" id="password" name="password">
+                            <span class="eye-icon" onclick="togglePassword()">🔒</span>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td colspan="2" align="center">
+                        <input type="submit" value="Register">
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+</div>
+
+<script>
+function togglePassword() {
+    let input = document.getElementById("password");
+    let icon = document.querySelector(".eye-icon");
+
+    if (input.type === "password") {
+        input.type = "text";
+        icon.textContent = "🔓";   // OPEN LOCK ICON
+    } else {
+        input.type = "password";
+        icon.textContent = "🔒";   // CLOSED LOCK ICON
+    }
+}
+
+function validateUser() {
+    let fname = document.getElementById("fname").value.trim();
+    let lname = document.getElementById("lname").value.trim();
+    let email = document.getElementById("email").value.trim();
+    let phone = document.getElementById("phone").value.trim();
+    let alt_no = document.getElementById("alt_no").value.trim();
+    let username = document.getElementById("username").value.trim();
+    let password = document.getElementById("password").value.trim();
+
+    let nameRegex = /^[A-Za-z]+$/;
+    let phoneRegex = /^[0-9]{10}$/;
+    let emailRegex = /^[A-Za-z0-9._%+-]+@gmail\.com$/;
+    let passRegex = /^(?=.*[A-Za-z])(?=.*\d).{6,}$/;
+
+    if (!nameRegex.test(fname)) {
+        alert("First name must contain only letters.");
+        return false;
+    }
+
+    if (!nameRegex.test(lname)) {
+        alert("Last name must contain letters only.");
+        return false;
+    }
+
+    if (!emailRegex.test(email)) {
+        alert("Email must end with @gmail.com");
+        return false;
+    }
+
+    if (!phoneRegex.test(phone)) {
+        alert("Phone must be 10 digits.");
+        return false;
+    }
+
+    if (alt_no && !phoneRegex.test(alt_no)) {
+        alert("Alternative phone must be 10 digits.");
+        return false;
+    }
+
+    if (username.length < 3) {
+        alert("Username must be minimum 3 characters.");
+        return false;
+    }
+
+    if (!passRegex.test(password)) {
+        alert("Password must be at least 6 characters and contain 1 letter & 1 number.");
+        return false;
+    }
+
+    return true;
+}
+</script>
+
+{% include 'footer.html' %}

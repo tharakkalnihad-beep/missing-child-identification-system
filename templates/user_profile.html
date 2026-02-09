@@ -1,0 +1,186 @@
+{% include 'user_header.html' %}
+
+<style>
+    body {
+        background: #f4f7ff;
+        font-family: Arial, sans-serif;
+    }
+
+    .profile-container {
+        width: 70%;
+        margin: 50px auto;
+        background: rgba(255, 255, 255, 0.90);
+        padding: 40px 50px;
+        border-radius: 18px;
+        box-shadow: 0 6px 25px rgba(0,0,0,0.20);
+        backdrop-filter: blur(8px);
+    }
+
+    .title-box {
+        text-align: center;
+        margin-bottom: 25px;
+    }
+
+    .title-box h2 {
+        font-size: 32px;
+        font-weight: bold;
+        background: linear-gradient(45deg, #4e8cff, #6a5acd);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 5px;
+    }
+
+    .divider {
+        width: 120px;
+        height: 4px;
+        background: linear-gradient(45deg, #4e8cff, #6a5acd);
+        margin: 0 auto 20px auto;
+        border-radius: 10px;
+    }
+
+    .profile-table {
+        width: 100%;
+        border-spacing: 0 12px;
+    }
+
+    .profile-table td:first-child {
+        font-weight: bold;
+        color: #333;
+        width: 30%;
+        padding-right: 10px;
+        font-size: 15px;
+    }
+
+    input, textarea {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #bbb;
+        border-radius: 10px;
+        background: rgba(255,255,255,0.8);
+        transition: 0.3s ease;
+        font-size: 15px;
+    }
+
+    input:focus, textarea:focus {
+        border-color: #4e8cff;
+        box-shadow: 0 0 6px rgba(78, 140, 255, 0.5);
+        outline: none;
+    }
+
+    input[type="file"] {
+        border: none;
+        padding: 5px;
+        background: transparent;
+    }
+
+    .proof-link {
+        display: inline-block;
+        margin-top: 5px;
+        color: #4e8cff;
+        font-size: 14px;
+    }
+
+    .btn-update {
+        margin-top: 30px;
+        width: 45%;
+        padding: 12px;
+        border-radius: 12px;
+        border: none;
+        background: linear-gradient(45deg, #4e8cff, #6a5acd);
+        color: white;
+        font-size: 17px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    .btn-update:hover {
+        transform: scale(1.07);
+        box-shadow: 0 6px 15px rgba(78,140,255,0.35);
+    }
+
+    .msg-success {
+        text-align: center;
+        color: green;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+</style>
+
+<br><br>
+
+<div class="profile-container">
+
+    <div class="title-box">
+        <h2>User Profile</h2>
+{#        <div class="divider"></div>#}
+    </div>
+
+    {% if messages %}
+        {% for msg in messages %}
+            <p class="msg-success">{{ msg }}</p>
+        {% endfor %}
+    {% endif %}
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <table class="profile-table">
+
+            <tr>
+                <td>First Name</td>
+                <td><input type="text" name="fname" value="{{ profile.fname }}"></td>
+            </tr>
+
+            <tr>
+                <td>Last Name</td>
+                <td><input type="text" name="lname" value="{{ profile.lname }}"></td>
+            </tr>
+
+            <tr>
+                <td>Email</td>
+                <td><input type="email" name="email" value="{{ profile.email }}"></td>
+            </tr>
+
+            <tr>
+                <td>Phone</td>
+                <td><input type="text" name="phone" value="{{ profile.phone }}"></td>
+            </tr>
+
+            <tr>
+                <td>Place</td>
+                <td><input type="text" name="place" value="{{ profile.place }}"></td>
+            </tr>
+
+            <tr>
+                <td>Address</td>
+                <td><textarea name="address" rows="2">{{ profile.address }}</textarea></td>
+            </tr>
+
+            <tr>
+                <td>Alternative Phone No</td>
+                <td><input type="text" name="alternative_ph_no" value="{{ profile.alternative_ph_no }}"></td>
+            </tr>
+
+            <tr>
+                <td>ID Proof</td>
+                <td>
+                    <input type="file" name="id_proof">
+                    {% if profile.id_proof %}
+                        <a class="proof-link" href="{{ profile.id_proof.url }}" target="_blank">View uploaded proof</a>
+                    {% endif %}
+                </td>
+            </tr>
+
+        </table>
+
+        <center>
+            <button type="submit" class="btn-update">Update Profile</button>
+        </center>
+
+    </form>
+</div>
+
+<br><br>
+
+{% include 'footer.html' %}

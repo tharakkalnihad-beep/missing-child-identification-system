@@ -1,0 +1,35 @@
+ <!-- ========== FOOTER SECTION ========== -->
+    <footer>
+        <div class="footer-content">
+            <p>
+                <span class="footer-icon">©</span>
+                2024 Drowsiness Detection System. All Rights Reserved.
+                <span class="footer-icon">⚡</span>
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        function toggleMenu() {
+            const nav = document.getElementById('nav-menu');
+            nav.classList.toggle('active');
+        }
+
+        // Close menu when clicking on a link (mobile)
+        document.querySelectorAll('nav a').forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth <= 768) {
+                    document.getElementById('nav-menu').classList.remove('active');
+                }
+            });
+        });
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 768) {
+                document.getElementById('nav-menu').classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>
